@@ -80,7 +80,7 @@ export default function EditPrompt({ params }) {
 
   if (!prompt) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-screen">
         <Spinner />
       </div>
     );
