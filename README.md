@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PromptManager
 
-## Getting Started
+一个简洁、美观、实用的提示词管理网站。
 
-First, run the development server:
+## 特性
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 简洁美观的界面设计
+- 完全开源，可以自行部署和修改
+- 支持提示词标签
+- 支持提示词版本管理
+- 移动端适配
+- 简化的登录系统，使用毫无压力
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 技术栈
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Next.js 14
+- Tailwind CSS
+- Lucide
+- Shadcn/UI
+- Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 部署流程
 
-## Learn More
+### vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. fork本项目
+2. 注册并登录vercel
+3. 点击`New Project`
+4. 选择`Import Git Repository`
+5. 输入项目名称，选择`GitHub`作为代码来源
+6. 点击`Deploy`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### 环境变量说明
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `NEXT_PUBLIC_SUPABASE_URL`：Supabase URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`：Supabase anon key
 
-## Deploy on Vercel
+### supabase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. 注册supabase账号并创建项目
+2. 进入项目设置，点击`Service Role`，点击`Generate new key`，复制key
+3. 将key填入vercel的环境变量中
+4. 进入项目设置，点击`Database`，点击`Create new database`，创建数据库
+5. 创建数据表
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+数据表如下：
+![alt text](Clip_2024-12-05_11-02-08.png)
+
+
+
+### 登录
+在supabase中的users表中创建一条数据，就是一个用户，使用token登录即可。
