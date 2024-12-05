@@ -12,7 +12,7 @@ export default function Home() {
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         <div className="text-center">
           <h1 className="text-7xl font-bold text-white mb-6 animate-fade-in drop-shadow-lg tracking-tight">
-            ✨ PromptManager
+            ✨ Prompt Manager
           </h1>
           <p className="text-2xl text-gray-300 mb-16 drop-shadow-md max-w-2xl mx-auto">
             一个优雅简洁的提示词管理器
