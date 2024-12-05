@@ -81,7 +81,7 @@ export default function Navbar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Link href="https://github.com/yourusername/yourrepo" target="_blank" legacyBehavior passHref>
+                  <Link href="https://github.com/liujuntao123/prompt-manager" target="_blank" legacyBehavior passHref>
                     <NavigationMenuLink className="text-muted-foreground flex items-center gap-1">
                       <Github className="h-4 w-4" />
                       GitHub
