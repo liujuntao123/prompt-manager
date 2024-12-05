@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request, { params }) {
   const { id } = params;
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
   // 检查提示词是否存在
   const { data: prompt, error: checkError } = await supabase

@@ -32,8 +32,8 @@
 
 #### 环境变量说明
 
-- `NEXT_PUBLIC_SUPABASE_URL`：Supabase URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`：Supabase anon key
+- `SUPABASE_URL`：Supabase URL
+- `SUPABASE_ANON_KEY`：Supabase anon key
 
 ### supabase
 

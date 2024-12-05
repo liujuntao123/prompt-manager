@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request, { params }) {
   const { id } = params;
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   
   const { data: prompt, error } = await supabase
     .from('prompts')
@@ -24,7 +24,7 @@ export async function GET(request, { params }) {
 
 export async function POST(request, { params }) {
   const { id } = params;
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
   const { title, content, description, is_public, tags, image_url ,version} = await request.json();
 
@@ -64,7 +64,7 @@ export async function POST(request, { params }) {
 
 export async function DELETE(request, { params }) {
   const { id } = params;
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
   // 检查提示词是否存在
   const { data: prompt, error: checkError } = await supabase
