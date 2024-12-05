@@ -1,40 +1,18 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js'
+import { clerkMiddleware,createRouteMatcher  } from '@clerk/nextjs/server'
 
-// Initialize Supabase client
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const isProtectedRoute = createRouteMatcher(['/prompts(.*)'])
 
-export async function middleware(req) {
-  // 从 cookie 中获取 token
-  const token = req.cookies.get('authToken')?.value;
-  console.log('token', token);
-  
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect()
+})
 
-  try {
-    // Use Supabase client to query the database
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('token', token)
 
-    if (error) {
-      throw error;
-    }
-    
-    if (data.length === 0) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.error('Database query error:', error);
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-}
 
 export const config = {
-  matcher: ['/prompts/:path*'],
-}; 
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
+}

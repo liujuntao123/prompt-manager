@@ -1,14 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server'
 
 export async function GET(request, { params }) {
   const { id } = params;
+  const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   
   const { data: prompt, error } = await supabase
     .from('prompts')
     .select('*')
     .eq('id', id)
+    .eq('user_id', userId)
     .single();
 
   if (error) {
@@ -24,6 +27,7 @@ export async function GET(request, { params }) {
 
 export async function POST(request, { params }) {
   const { id } = params;
+  const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
   const { title, content, description, is_public, tags, image_url ,version} = await request.json();
@@ -32,6 +36,7 @@ export async function POST(request, { params }) {
     .from('prompts')
     .select('version')
     .eq('id', id)
+    .eq('user_id', userId)
     .single();
 
   if (error || !prompt) {
@@ -40,7 +45,8 @@ export async function POST(request, { params }) {
 
 
   const updateData = {
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
+    user_id: userId
   };
   if (title !== undefined) updateData.title = title;
   if (content !== undefined) updateData.content = content;
@@ -64,6 +70,7 @@ export async function POST(request, { params }) {
 
 export async function DELETE(request, { params }) {
   const { id } = params;
+  const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
   // 检查提示词是否存在
@@ -71,6 +78,7 @@ export async function DELETE(request, { params }) {
     .from('prompts')
     .select('id')
     .eq('id', id)
+    .eq('user_id', userId)
     .single();
 
   if (checkError || !prompt) {

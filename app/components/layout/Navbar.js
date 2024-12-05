@@ -12,6 +12,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Menu, Github, FolderPlus, Library, LogOut } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -137,29 +139,12 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center">
-            {isLoggedIn ? (
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  退出登录
-                </Button>
-                <Avatar>
-                  <AvatarImage src="/avatar-placeholder.png" />
-                  <AvatarFallback>PM</AvatarFallback>
-                </Avatar>
-              </div>
-            ) : (
-              <Button
-                variant="default"
-                onClick={() => window.location.href = '/login'}
-              >
-                登录
-              </Button>
-            )}
+          <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </div>
       </div>

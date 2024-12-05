@@ -2,7 +2,6 @@
 
 一个简洁、美观、实用的提示词管理网站。
 
-网站预览访问令牌：1234567890
 
 ## 特性
 
@@ -19,7 +18,8 @@
 - Tailwind CSS
 - Lucide
 - Shadcn/UI
-- Supabase
+- 数据库：Supabase
+- 用户认证：Clerk
 
 ## 部署流程
 
@@ -49,6 +49,3 @@
 ![alt text](Clip_2024-12-05_11-02-08.png)
 
 
-
-### 登录
-在supabase中的users表中创建一条数据，就是一个用户，使用token登录即可。
