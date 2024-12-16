@@ -30,7 +30,8 @@
 3. 点击`New Project`
 4. 选择`Import Git Repository`
 5. 输入项目名称，选择`GitHub`作为代码来源
-6. 点击`Deploy`
+6. 填写完所需的环境变量后继续
+7. 点击`Deploy`
 
 #### 环境变量说明
 
