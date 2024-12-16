@@ -73,6 +73,7 @@
   );
   ```
 5. 注意如果使用anon public，需要到Table Editor界面选择表后依次关闭RLS
+6. 如果要上传封面图需要在supabase Storage里创建一个bucket，bucket名为：prompt-manager
 
 #### EF图
 
