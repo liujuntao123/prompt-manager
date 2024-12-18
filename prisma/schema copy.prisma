@@ -6,11 +6,13 @@
 
 datasource db {
   provider   = "postgresql"
-  url        = env("DATABASE_URL")
+  url        = env("database_POSTGRES_PRISMA_URL")
+  directUrl  = env("database_POSTGRES_URL_NON_POOLING")
 }
 
 generator client {
   provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 model User {
