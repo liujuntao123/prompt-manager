@@ -21,16 +21,6 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
 
-  useEffect(() => {
-    console.log('isAuthenticated',isAuthenticated);
-    console.log('session',session);
-    // if (!isAuthenticated && pathname.startsWith('/prompts')) {
-    //   router.push('/');
-    // }
-  }, [isAuthenticated, pathname, router,session]);
-
-
-
   const handleSignOut = () => {
     signOut();
   };
