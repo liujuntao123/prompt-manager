@@ -1,15 +1,16 @@
 import { auth } from "@/auth"
 
-
 export default auth((req) => {
-  console.log('in middleware')
+  const start = performance.now()
+  
   if (!req.auth && req.nextUrl.pathname.startsWith("/prompts")) {
-    console.log('in middleware redirect')
     const newUrl = new URL("/api/auth/signin", req.nextUrl.origin)
+    console.log(`[Middleware] Auth redirect took ${performance.now() - start}ms`)
     return Response.redirect(newUrl)
   }
+  
+  console.log(`[Middleware] Auth check took ${performance.now() - start}ms`)
 })
-
 
 export const config = {
   matcher: [

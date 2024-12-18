@@ -21,10 +21,13 @@ export default function PromptDetail({ params }) {
 
   useEffect(() => {
     if (id) {
-      // Fetch the prompt data from your API or data source
+      const start = performance.now()
       fetch(`/api/prompts/${id}`)
         .then((response) => response.json())
-        .then((data) => setPrompt({...data, coverImg: data.coverImg ? data.coverImg : null,tags: data.tags ? data.tags.split(',') : []}))
+        .then((data) => {
+          setPrompt({...data, coverImg: data.coverImg ? data.coverImg : null, tags: data.tags ? data.tags.split(',') : []})
+          console.log(`[Prompt Detail] Data fetch took ${performance.now() - start}ms`)
+        })
         .catch((error) => console.error('Error fetching prompt:', error));
     }
   }, [id]);
@@ -40,11 +43,13 @@ export default function PromptDetail({ params }) {
   };
 
   const handleDelete = async () => {
+    const start = performance.now()
     try {
       const response = await fetch(`/api/prompts/${id}`, {
         method: 'DELETE',
       });
       
+      console.log(`[Prompt Detail] Delete operation took ${performance.now() - start}ms`)
       if (response.ok) {
         router.push('/prompts');
       } else {
@@ -56,12 +61,14 @@ export default function PromptDetail({ params }) {
   };
 
   const handleShare = async () => {
+    const start = performance.now()
     try {
       setIsSharing(true);
       const response = await fetch(`/api/prompts/share/${id}`, {
         method: 'POST',
       });
 
+      console.log(`[Prompt Detail] Share operation took ${performance.now() - start}ms`)
       if (!response.ok) {
         throw new Error('分享失败');
       }
