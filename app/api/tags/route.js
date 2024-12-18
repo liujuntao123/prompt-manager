@@ -1,20 +1,17 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { auth } from "@/auth";
+import prisma from '@/lib/prisma'; // 确保你有这个prisma客户端实例文件
 
 export async function GET() {
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
+    
 
-    const { data: tags, error } = await supabase
-      .from('tags')
-      .select('name');
-
-    if (error) {
-      throw error;
-    }
+    // 使用Prisma查询所有tags
+    const tags = await prisma.tag.findMany({
+      select: {
+        name: true
+      }
+    });
 
     return NextResponse.json(tags);
   } catch (error) {
@@ -25,23 +22,18 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { name } = await request.json();
     
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
+    const { name } = await request.json();
+    console.log('name',name);
+    
+    // 使用Prisma创建新tag
+    const tag = await prisma.tag.create({
+      data: {
+        name:name,
+      }
+    });
 
-    const { data, error } = await supabase
-      .from('tags')
-      .insert([{ name }])
-      .select();
-
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json(data[0]);
+    return NextResponse.json(tag);
   } catch (error) {
     console.error('Error creating tag:', error);
     return NextResponse.json({ error: 'Failed to create tag' }, { status: 500 });

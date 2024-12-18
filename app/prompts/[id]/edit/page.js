@@ -71,7 +71,7 @@ export default function EditPrompt({ params }) {
           body: formData,
         });
         const data = await response.json();
-        setPrompt({ ...prompt, cover_img: data.url });
+        setPrompt({ ...prompt, coverImg: data.url });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -176,13 +176,13 @@ export default function EditPrompt({ params }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cover_img">封面图片</Label>
+              <Label htmlFor="coverImg">封面图片</Label>
               <div className="flex items-center gap-4">
-                {prompt.cover_img && (
-                  <Image src={prompt.cover_img} alt="封面预览" className="w-20 h-20 object-cover rounded" width={80} height={80}/>
+                {prompt.coverImg && (
+                  <Image src={prompt.coverImg} alt="封面预览" className="w-20 h-20 object-cover rounded" width={80} height={80}/>
                 )}
                 <Input
-                  id="cover_img"
+                  id="coverImg"
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}

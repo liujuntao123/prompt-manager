@@ -1,18 +1,20 @@
-import { clerkMiddleware,createRouteMatcher  } from '@clerk/nextjs/server'
+import { auth } from "@/auth"
 
-const isProtectedRoute = createRouteMatcher(['/prompts(.*)'])
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) await auth.protect()
+export default auth((req) => {
+  if (!req.auth && req.nextUrl.pathname.startsWith("/prompts")) {
+    const newUrl = new URL("/api/auth/signin", req.nextUrl.origin)
+    return Response.redirect(newUrl)
+  }
 })
-
 
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
+    // 需要登录验证的路由
+    "/api/prompts/:path*",
+    // 排除不需要验证的路由
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ]
 }
+

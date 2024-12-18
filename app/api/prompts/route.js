@@ -1,49 +1,49 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma'
 
 export async function GET(request) {
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-  const { userId } = await auth()
-  
-  // 从 URL 中获取 tag 参数
+  const session = await auth()
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const { searchParams } = new URL(request.url);
   const tag = searchParams.get('tag');
 
-  let query = supabase
-    .from('prompts')
-    .select('*')
-    .eq('user_id', userId);
-  // 如果存在 tag 参数，添加过滤条件
-  if (tag) {
-    query = query.contains('tags', [tag]);
+  const where = {
+    userId: session.user.id,
+    ...(tag && { tags: { has: tag } })
   }
 
-  const { data: prompts, error } = await query.order('created_at', { ascending: false });
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    const prompts = await prisma.prompt.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    })
+    return NextResponse.json(prompts)
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
-
-  return NextResponse.json(prompts);
 }
 
 export async function POST(request) {
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-  const { userId } = await auth()
-
-  const data = await request.json();
-  // 使用authToken作为user_id
-  data.user_id = userId;
-
-  const { data: newPrompt, error } = await supabase
-    .from('prompts')
-    .insert([data])
-    .select();
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  const session = await auth()
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  return NextResponse.json(newPrompt[0]);
+  const data = await request.json()
+  
+  try {
+    const newPrompt = await prisma.prompt.create({
+      data: {
+        ...data,
+        userId: session.user.id,
+      }
+    })
+    return NextResponse.json(newPrompt)
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 } 

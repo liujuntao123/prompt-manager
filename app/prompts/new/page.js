@@ -17,7 +17,7 @@ export default function NewPrompt() {
     description: '',
     tags: '',
     version: '',
-    cover_img: '',
+    coverImg: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tagOptions, setTagOptions] = useState([]);
@@ -44,7 +44,7 @@ export default function NewPrompt() {
           body: formData,
         });
         const data = await response.json();
-        setPrompt({ ...prompt, cover_img: data.url });
+        setPrompt({ ...prompt, coverImg: data.url });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -177,13 +177,13 @@ export default function NewPrompt() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cover_img">封面图片</Label>
+              <Label htmlFor="coverImg">封面图片</Label>
               <div className="flex items-center gap-4">
-                {prompt.cover_img && (
-                  <Image src={prompt.cover_img} alt="封面预览" className="w-20 h-20 object-cover rounded" />
+                {prompt.coverImg && (
+                  <Image src={prompt.coverImg} alt="封面预览" className="w-20 h-20 object-cover rounded" width={1000} height={1000} />
                 )}
                 <Input
-                  id="cover_img"
+                  id="coverImg"
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}

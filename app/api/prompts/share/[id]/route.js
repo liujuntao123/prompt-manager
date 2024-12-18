@@ -1,38 +1,40 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server'
+import { auth } from "@/auth";
+import prisma from '@/lib/prisma';
 
 export async function POST(request, { params }) {
   const { id } = params;
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-  const { userId } = await auth()
-  // 检查提示词是否存在
-  const { data: prompt, error: checkError } = await supabase
-    .from('prompts')
-    .select('id')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single();
+  
+  // 获取当前用户会话
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  if (checkError || !prompt) {
-    return NextResponse.json(
-      { error: checkError ? checkError.message : 'Prompt not found' }, 
-      { status: 404 }
-    );
+  // 检查提示词是否存在
+  const prompt = await prisma.prompt.findFirst({
+    where: {
+      id: id,
+      userId: session.user.id
+    }
+  });
+
+  if (!prompt) {
+    return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
   }
 
   // 更新 is_public 为 true
-  const { error: updateError } = await supabase
-    .from('prompts')
-    .update({ 
-      is_public: true,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id);
+  try {
+    await prisma.prompt.update({
+      where: { id: id },
+      data: { 
+        isPublic: true,
+        updatedAt: new Date()
+      }
+    });
 
-  if (updateError) {
-    return NextResponse.json({ error: updateError.message }, { status: 500 });
+    return NextResponse.json({ message: 'Prompt shared successfully' });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  return NextResponse.json({ message: 'Prompt shared successfully' });
 }

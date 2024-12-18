@@ -30,10 +30,10 @@ export default function PromptList({ prompts }) {
       {prompts?.map((prompt) => (
         <Card key={prompt.id} className="flex flex-col  transition-all duration-200 hover:shadow-lg">
           <CardHeader className="p-0">
-            {prompt.cover_img ? (
+            {prompt.coverImg ? (
               <div className="h-48 relative overflow-hidden rounded-t-lg">
                 <Image 
-                  src={prompt.cover_img}
+                  src={prompt.coverImg}
                   alt={prompt.title}
                   className="object-cover hover:scale-105 transition-transform duration-200"
                   fill
@@ -74,7 +74,7 @@ export default function PromptList({ prompts }) {
           <CardFooter className="flex justify-between items-center border-t pt-4 mt-auto">
             <div className="flex items-center gap-3">
               <span className="text-sm text-muted-foreground/70">
-                {new Date(prompt.created_at).toLocaleDateString()}
+                {new Date(prompt.updatedAt).toLocaleDateString()}
               </span>
               <Button
                 variant="ghost"

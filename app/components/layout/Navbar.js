@@ -1,7 +1,8 @@
 'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -12,31 +13,26 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Menu, Github, FolderPlus, Library, LogOut } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const hasAuthToken = document.cookie.includes('authToken=');
-      if (!hasAuthToken) {
-        setIsLoggedIn(false);
-        setUser(null);
-        return;
-      }
-      setUser('prompt大师');
-      setIsLoggedIn(true);
-    };
-    checkAuth();
-  }, []);
+    console.log('isAuthenticated',isAuthenticated);
+    console.log('session',session);
+    // if (!isAuthenticated && pathname.startsWith('/prompts')) {
+    //   router.push('/');
+    // }
+  }, [isAuthenticated, pathname, router,session]);
 
-  const handleSignOut = async () => {
-    document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    window.location.href = '/';
+
+
+  const handleSignOut = () => {
+    signOut();
   };
 
   return (
@@ -139,12 +135,23 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center">
-          <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            {!isAuthenticated ? (
+              <Button onClick={() => signIn()}>
+                登录
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <div className="text-sm text-muted-foreground">{session.user?.name||session?.user?.email}</div>
+                <Avatar>
+                  <AvatarImage src={session?.user?.image} />
+                  <AvatarFallback>{session?.user?.name?.[0]||session?.user?.email[0]}</AvatarFallback>
+                </Avatar>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  退出
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

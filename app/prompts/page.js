@@ -34,7 +34,7 @@ export default function PromptsPage() {
         setPrompts(data.map(prompt => ({
           ...prompt,
           version: prompt.version || '1.0',
-          cover_img: prompt.cover_img || '/default-cover.jpg',
+          coverImg: prompt.coverImg || '/default-cover.jpg',
           tags: prompt.tags?.split(',') || []
         })));
       } catch (error) {

@@ -3,9 +3,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '9000',
+        pathname: '/images/**',
+      },
+      {
         protocol: 'https',
-        hostname: '*.supabase.co',
-        pathname: '/storage/v1/object/public/**',
+        hostname: '**.blob.vercel-storage.com',
+        port: '',
+        pathname: '/**',
       },
     ],
   },

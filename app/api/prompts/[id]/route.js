@@ -1,102 +1,103 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server'
+import { auth } from "@/auth";
+import prisma from '@/lib/prisma';
 
 export async function GET(request, { params }) {
   const { id } = params;
-  const { userId } = await auth()
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+  const session = await auth();
   
-  const { data: prompt, error } = await supabase
-    .from('prompts')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  if (error) {
+  try {
+    const prompt = await prisma.prompt.findUnique({
+      where: {
+        id: id,
+        userId: session.user.id
+      }
+    });
+
+    if (!prompt) {
+      return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(prompt);
+  } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  if (!prompt) {
-    return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
-  }
-
-  return NextResponse.json(prompt);
 }
 
 export async function POST(request, { params }) {
   const { id } = params;
-  const { userId } = await auth()
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-
-  const { title, content, description, is_public, tags, image_url ,version} = await request.json();
-
-  const { data: prompt, error } = await supabase
-    .from('prompts')
-    .select('version')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single();
-
-  if (error || !prompt) {
-    return NextResponse.json({ error: error ? error.message : 'Prompt not found' }, { status: 500 });
+  const session = await auth();
+  
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  try {
+    const { title, content, description, is_public, tags, image_url, version } = await request.json();
 
-  const updateData = {
-    updated_at: new Date().toISOString(),
-    user_id: userId
-  };
-  if (title !== undefined) updateData.title = title;
-  if (content !== undefined) updateData.content = content;
-  if (description !== undefined) updateData.description = description;
-  if (is_public !== undefined) updateData.is_public = is_public;
-  if (tags !== undefined) updateData.tags = tags;
-  if (image_url !== undefined) updateData.image_url = image_url;
-  if(version !== undefined) updateData.version = version;
+    const prompt = await prisma.prompt.findUnique({
+      where: {
+        id: id,
+        userId: session.user.id
+      }
+    });
 
-  const { error: updateError } = await supabase
-    .from('prompts')
-    .update(updateData)
-    .eq('id', id);
+    if (!prompt) {
+      return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
+    }
 
-  if (updateError) {
-    return NextResponse.json({ error: updateError.message }, { status: 500 });
+    const updateData = {
+      updatedAt: new Date(),
+      ...(title !== undefined && { title }),
+      ...(content !== undefined && { content }),
+      ...(description !== undefined && { description }),
+      ...(is_public !== undefined && { isPublic: is_public }),
+      ...(tags !== undefined && { tags }),
+      ...(image_url !== undefined && { imageUrl: image_url }),
+      ...(version !== undefined && { version })
+    };
+
+    await prisma.prompt.update({
+      where: { id },
+      data: updateData
+    });
+
+    return NextResponse.json({ message: 'Prompt updated successfully' });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  return NextResponse.json({ message: 'Prompt updated successfully' });
 }
 
 export async function DELETE(request, { params }) {
   const { id } = params;
-  const { userId } = await auth()
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-
-  // 检查提示词是否存在
-  const { data: prompt, error: checkError } = await supabase
-    .from('prompts')
-    .select('id')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single();
-
-  if (checkError || !prompt) {
-    return NextResponse.json(
-      { error: checkError ? checkError.message : 'Prompt not found' }, 
-      { status: 404 }
-    );
+  const session = await auth();
+  
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // 执行删除操作
-  const { error: deleteError } = await supabase
-    .from('prompts')
-    .delete()
-    .eq('id', id);
+  try {
+    const prompt = await prisma.prompt.findUnique({
+      where: {
+        id: id,
+        userId: session.user.id
+      }
+    });
 
-  if (deleteError) {
-    return NextResponse.json({ error: deleteError.message }, { status: 500 });
+    if (!prompt) {
+      return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
+    }
+
+    await prisma.prompt.delete({
+      where: { id }
+    });
+
+    return NextResponse.json({ message: 'Prompt deleted successfully' });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  return NextResponse.json({ message: 'Prompt deleted successfully' });
 } 

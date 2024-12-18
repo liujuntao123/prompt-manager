@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// 初始化 Supabase 客户端
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY,
- 
-);
+import { auth } from "@/auth";
+import { put } from "@vercel/blob";
 
 export async function POST(request) {
   try {
+    // 获取用户会话
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get('image');
     
@@ -17,24 +17,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    // 生成唯一文件名
-    const fileName = `${Date.now()}-${file.name}`;
-    
-    // 上传到 Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('prompt-manager') // 替换为你的 bucket 名称
-      .upload(fileName, file);
+    // 使用 Vercel Blob 上传文件
+    const { url } = await put(file.name, file, {
+      access: 'public',
+    });
 
-    if (error) {
-      throw error;
-    }
-
-    // 获取文件的公共URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('prompt-manager')
-      .getPublicUrl(fileName);
-    
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url });
   } catch (error) {
     console.error('Error uploading file:', error);
     return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
