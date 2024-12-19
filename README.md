@@ -44,8 +44,31 @@
 3. 将key填入vercel的环境变量中
 4. 进入项目设置，点击`Database`，点击`Create new database`，创建数据库
 5. 创建数据表
+```
+-- 创建 prompts 表
+CREATE TABLE prompts (
+    id UUID PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    is_public BOOLEAN,
+    user_id TEXT,
+    version TEXT,
+    tags TEXT,
+    cover_img TEXT
+);
 
-数据表如下：
-![alt text](Clip_2024-12-05_11-02-08.png)
+-- 创建 tags 表
+CREATE TABLE tags (
+    id UUID PRIMARY KEY,
+    name TEXT NOT NULL
+);
+```
+6. 创建bucket，用于存储封面图片
+进入项目设置，点击`Storage`，点击`Create bucket`，创建bucket
 
 
+### clerk
+配置非常简单，按照流程一步步来就行，这里不做详细说明。
