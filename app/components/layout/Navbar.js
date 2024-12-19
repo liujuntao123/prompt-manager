@@ -25,6 +25,12 @@ export default function Navbar() {
     signOut();
   };
 
+  useEffect(() => {
+    if (status==="unauthenticated"&&pathname.startsWith("/prompts")) {
+      router.push('/api/auth/signin');
+    }
+  }, [session,status,router,pathname]);
+
   return (
     <nav className="border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
