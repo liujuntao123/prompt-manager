@@ -17,12 +17,14 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    // 生成唯一文件名
-    const fileName = `${Date.now()}-${file.name}`;
+    // 获取文件扩展名
+    const fileExtension = file.name.split('.').pop();
+    // 只使用时间戳生成文件名
+    const fileName = `${Date.now()}.${fileExtension}`;
     
     // 上传到 Supabase Storage
     const { data, error } = await supabase.storage
-      .from('prompt-manager') // 替换为你的 bucket 名称
+      .from('prompt-manager')
       .upload(fileName, file);
 
     if (error) {

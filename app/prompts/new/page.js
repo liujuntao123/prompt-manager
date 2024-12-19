@@ -180,7 +180,7 @@ export default function NewPrompt() {
               <Label htmlFor="cover_img">封面图片</Label>
               <div className="flex items-center gap-4">
                 {prompt.cover_img && (
-                  <Image src={prompt.cover_img} alt="封面预览" className="w-20 h-20 object-cover rounded" />
+                  <Image src={prompt.cover_img} alt="封面预览" className="w-20 h-20 object-cover rounded" width={80} height={80} />
                 )}
                 <Input
                   id="cover_img"
