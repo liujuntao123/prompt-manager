@@ -34,8 +34,13 @@
 
 #### 环境变量说明
 
-- `SUPABASE_URL`：Supabase URL
-- `SUPABASE_ANON_KEY`：Supabase anon key
+- `SUPABASE_URL`：Supabase 项目 URL
+- `SUPABASE_ANON_KEY`：Supabase 匿名密钥
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`：Clerk 公钥，用于客户端认证
+- `CLERK_SECRET_KEY`：Clerk 私钥，用于服务端认证
+- `AUTH_SECRET`：用于 NextAuth.js 的加密密钥
+- `GITHUB_ID`：GitHub OAuth 应用的客户端 ID（可选，用于 GitHub 登录）
+- `GITHUB_SECRET`：GitHub OAuth 应用的客户端密钥（可选，用于 GitHub 登录）
 
 ### supabase
 
