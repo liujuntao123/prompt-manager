@@ -109,7 +109,7 @@ export default function PromptList({ prompts }) {
               </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end items-center border-t pt-2 pb-2 px-3 sm:pt-3 sm:pb-3 sm:px-6 mt-auto">
+            <CardFooter className="flex justify-end items-center border-t pt-1 pb-1 px-3 sm:pt-3 sm:pb-3 sm:px-6 mt-auto">
               <div className="flex items-center gap-1 sm:gap-2">
                 <Button
                   variant="ghost"
