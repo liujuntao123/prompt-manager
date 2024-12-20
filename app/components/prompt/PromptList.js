@@ -73,12 +73,12 @@ export default function PromptList({ prompts }) {
               )}
             </CardHeader>
 
-            <CardContent className="flex-1 pt-4 pb-2 h-[180px]">
-              <h3 className="text-base sm:text-xl font-semibold mb-2 line-clamp-1 hover:text-primary transition-colors">
+            <CardContent className="flex-1 pt-2 pb-1.5 px-3 sm:pt-4 sm:pb-2 sm:px-6 h-[160px] sm:h-[180px]">
+              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1 hover:text-primary transition-colors">
                 {prompt.title}
               </h3>
               
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm text-muted-foreground/70 mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground/70 mb-1 sm:mb-2">
                 <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
                 {prompt.version && (
                   <div className="flex items-center gap-2">
@@ -88,11 +88,11 @@ export default function PromptList({ prompts }) {
                 )}
               </div>
               
-              <p className="text-muted-foreground/90 text-sm leading-6 max-h-[48px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
+              <p className="text-muted-foreground/90 text-xs sm:text-sm leading-5 sm:leading-6 max-h-[40px] sm:max-h-[48px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
                 {prompt.content}
               </p>
               
-              <div className="flex flex-wrap gap-1.5 min-h-[24px] max-h-[24px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
+              <div className="flex flex-wrap gap-1 sm:gap-1.5 min-h-[20px] sm:min-h-[24px] max-h-[20px] sm:max-h-[24px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
                 {prompt.tags?.map((tag) => (
                   <span 
                     key={tag}
@@ -109,8 +109,8 @@ export default function PromptList({ prompts }) {
               </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end items-center border-t pt-3 pb-3 mt-auto">
-              <div className="flex items-center gap-2">
+            <CardFooter className="flex justify-end items-center border-t pt-2 pb-2 px-3 sm:pt-3 sm:pb-3 sm:px-6 mt-auto">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -120,7 +120,7 @@ export default function PromptList({ prompts }) {
                   }}
                   className="hover:bg-secondary/80"
                 >
-                  <Copy className="h-4 w-4" />
+                  <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -131,7 +131,7 @@ export default function PromptList({ prompts }) {
                   }}
                   className="hover:bg-secondary/80"
                 >
-                  <Share2 className="h-4 w-4" />
+                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </CardFooter>
