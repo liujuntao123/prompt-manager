@@ -65,7 +65,7 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ message: 'Prompt updated successfully', version: newVersion });
+  return NextResponse.json({ message: 'Prompt updated successfully', version: version });
 }
 
 export async function DELETE(request, { params }) {

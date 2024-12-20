@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
+import { ArrowLeft } from "lucide-react"
 
 export default function PromptDetail({ params }) {
   const router = useRouter();
-  const unwrappedParams = use(params);
-  const id = unwrappedParams.id;
+  const {id} = use(params);
   const [prompt, setPrompt] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -87,6 +87,15 @@ export default function PromptDetail({ params }) {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 max-w-4xl">
+      <Button
+        variant="ghost"
+        className="mb-4 -ml-2 text-muted-foreground"
+        onClick={() => router.back()}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        返回
+      </Button>
+
       {prompt.cover_img && (
         <Card className="mb-6 sm:mb-8">
           <CardContent className="p-0">

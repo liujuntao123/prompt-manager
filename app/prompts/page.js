@@ -59,7 +59,7 @@ export default function PromptsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
-      <div className="container px-4 py-16 mx-auto max-w-7xl">
+      <div className="container px-4 py-4 sm:py-16 mx-auto max-w-7xl">
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
