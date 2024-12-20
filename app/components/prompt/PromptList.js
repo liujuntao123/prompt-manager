@@ -73,20 +73,26 @@ export default function PromptList({ prompts }) {
               )}
             </CardHeader>
 
-            <CardContent className="flex-1 pt-4 pb-2">
-              <h3 className="text-xl font-semibold mb-2 line-clamp-1 hover:text-primary transition-colors">
+            <CardContent className="flex-1 pt-4 pb-2 h-[180px]">
+              <h3 className="text-base sm:text-xl font-semibold mb-2 line-clamp-1 hover:text-primary transition-colors">
                 {prompt.title}
               </h3>
               
-              {prompt.version && (
-                <div className="text-sm text-muted-foreground/80 mb-2">
-                  版本: {prompt.version}
-                </div>
-              )}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm text-muted-foreground/70 mb-2">
+                <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
+                {prompt.version && (
+                  <div className="flex items-center gap-2">
+                    <span className="hidden sm:inline">•</span>
+                    <span>版本: {prompt.version}</span>
+                  </div>
+                )}
+              </div>
               
-              <p className="text-muted-foreground/90 mb-3 line-clamp-2">{prompt.content}</p>
+              <p className="text-muted-foreground/90 text-sm leading-6 max-h-[48px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
+                {prompt.content}
+              </p>
               
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 min-h-[24px] max-h-[24px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
                 {prompt.tags?.map((tag) => (
                   <span 
                     key={tag}
@@ -95,14 +101,16 @@ export default function PromptList({ prompts }) {
                     #{tag}
                   </span>
                 ))}
+                {prompt.tags?.length > 3 && (
+                  <span className="text-muted-foreground text-xs">
+                    +{prompt.tags.length - 3}
+                  </span>
+                )}
               </div>
             </CardContent>
 
-            <CardFooter className="flex justify-between items-center border-t pt-3 pb-3 mt-auto">
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground/70">
-                  {new Date(prompt.created_at).toLocaleDateString()}
-                </span>
+            <CardFooter className="flex justify-end items-center border-t pt-3 pb-3 mt-auto">
+              <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
                   size="icon"

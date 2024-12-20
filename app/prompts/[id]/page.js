@@ -90,10 +90,9 @@ export default function PromptDetail({ params }) {
       <Button
         variant="ghost"
         className="mb-4 -ml-2 text-muted-foreground"
-        onClick={() => router.back()}
+        onClick={() => router.push('/prompts')}
       >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        返回
+        <ArrowLeft className="h-4 w-4" />
       </Button>
 
       {prompt.cover_img && (
@@ -122,20 +121,29 @@ export default function PromptDetail({ params }) {
                 variant={shareSuccess ? "success" : "secondary"}
                 className="flex-1 sm:flex-none"
               >
-                {shareSuccess ? '已复制链接' : '分享'}
+                {shareSuccess ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                )}
               </Button>
               <Button
                 onClick={handleCopy}
                 variant={copySuccess ? "success" : "secondary"}
                 className="flex-1 sm:flex-none"
               >
-                {copySuccess ? '已复制' : (
-                  <>
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-12a2 2 0 00-2-2h-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    复制提示词
-                  </>
+                {copySuccess ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-12a2 2 0 00-2-2h-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
                 )}
               </Button>
               <Button
@@ -143,14 +151,18 @@ export default function PromptDetail({ params }) {
                 variant="default"
                 className="flex-1 sm:flex-none"
               >
-                编辑
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
               </Button>
               <Button
                 onClick={() => setShowDeleteConfirm(true)}
                 variant="destructive"
                 className="flex-1 sm:flex-none"
               >
-                删除
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
               </Button>
             </div>
           </div>
@@ -215,7 +227,9 @@ export default function PromptDetail({ params }) {
           <p className="text-muted-foreground">确定要删除这个提示词吗？此操作无法撤销。</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
-              取消
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </Button>
             <Button
               variant="destructive"
@@ -224,7 +238,9 @@ export default function PromptDetail({ params }) {
                 setShowDeleteConfirm(false);
               }}
             >
-              确认删除
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
             </Button>
           </DialogFooter>
         </DialogContent>
