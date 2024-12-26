@@ -108,7 +108,7 @@ export default function PromptList({ prompts }) {
                 )}
               </div>
               
-              <p className="text-muted-foreground/90 text-[11px] sm:text-xs leading-4 sm:leading-5 max-h-[40px] sm:max-h-[360px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent bg-secondary/20 rounded-sm p-2">
+              <p className="text-muted-foreground/90 text-[11px] sm:text-xs leading-4 sm:leading-5 h-[40px] sm:h-[400px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent bg-secondary/20 rounded-sm p-2">
                 {prompt.content}
               </p>
               
