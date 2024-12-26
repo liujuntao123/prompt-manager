@@ -2,8 +2,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Copy, Share2 } from "lucide-react"
+import { Copy, Share2, MoreHorizontal } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function PromptList({ prompts }) {
   const { toast } = useToast();
@@ -52,33 +58,47 @@ export default function PromptList({ prompts }) {
   };
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
       {prompts?.map((prompt) => (
         <Link href={`/prompts/${prompt.id}`} key={prompt.id}>
           <Card className="flex flex-col transition-all duration-200 hover:shadow-lg cursor-pointer">
-            <CardHeader className="p-0">
-              {prompt.cover_img ? (
-                <div className="h-24 sm:h-40 md:h-36 relative overflow-hidden rounded-t-lg">
-                  <Image 
-                    src={prompt.cover_img}
-                    alt={prompt.title}
-                    className="object-cover hover:scale-105 transition-transform duration-200"
-                    fill
-                  />
-                </div>
-              ) : (
-                <div className="h-32 sm:h-40 md:h-48 bg-muted/50 flex items-center justify-center rounded-t-lg">
-                  <span className="text-muted-foreground/70">无封面图片</span>
-                </div>
-              )}
-            </CardHeader>
-
-            <CardContent className="flex-1 pt-2 pb-1.5 px-3 sm:pt-4 sm:pb-2 sm:px-6 h-[160px] sm:h-[180px]">
-              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-1 hover:text-primary transition-colors">
-                {prompt.title}
-              </h3>
+            <CardContent className="flex-1 pt-3 pb-2 px-4">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-xl font-semibold line-clamp-1 hover:text-primary transition-colors max-w-[calc(100%-40px)]">
+                  {prompt.title}
+                </h3>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => e.preventDefault()}
+                      className="hover:bg-secondary/80"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[160px]">
+                    <DropdownMenuItem onClick={(e) => {
+                      e.preventDefault();
+                      handleCopy(prompt.content);
+                    }}>
+                      <Copy className="mr-2 h-4 w-4" />
+                      <span>复制提示词</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => {
+                      e.preventDefault();
+                      handleShare(prompt.id);
+                    }}>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      <span>分享链接</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               
-              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground/70 mb-1 sm:mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground/70 mb-1 sm:mb-1.5">
                 <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
                 {prompt.version && (
                   <div className="flex items-center gap-2">
@@ -88,7 +108,7 @@ export default function PromptList({ prompts }) {
                 )}
               </div>
               
-              <p className="text-muted-foreground/90 text-xs sm:text-sm leading-5 sm:leading-6 max-h-[40px] sm:max-h-[48px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
+              <p className="text-muted-foreground/90 text-[11px] sm:text-xs leading-4 sm:leading-5 max-h-[40px] sm:max-h-[360px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent bg-secondary/20 rounded-sm p-2">
                 {prompt.content}
               </p>
               
@@ -108,33 +128,6 @@ export default function PromptList({ prompts }) {
                 )}
               </div>
             </CardContent>
-
-            <CardFooter className="flex justify-end items-center border-t pt-1 pb-1 px-3 sm:pt-3 sm:pb-3 sm:px-6 mt-auto">
-              <div className="flex items-center gap-1 sm:gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCopy(prompt.content);
-                  }}
-                  className="hover:bg-secondary/80"
-                >
-                  <Copy className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleShare(prompt.id);
-                  }}
-                  className="hover:bg-secondary/80"
-                >
-                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </Button>
-              </div>
-            </CardFooter>
           </Card>
         </Link>
       ))}

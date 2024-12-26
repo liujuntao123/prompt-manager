@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, MoreVertical, Copy, Check } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function PromptDetail({ params }) {
   const router = useRouter();
@@ -86,138 +87,105 @@ export default function PromptDetail({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 max-w-4xl">
-      <Button
-        variant="ghost"
-        className="mb-4 -ml-2 text-muted-foreground"
-        onClick={() => router.push('/prompts')}
-      >
-        <ArrowLeft className="h-4 w-4" />
-      </Button>
+    <div className="container mx-auto p-2 sm:p-6 max-w-4xl">
+      <div className="flex items-center gap-2 sm:gap-4 mb-6">
+        <Button
+          variant="ghost"
+          className="text-muted-foreground h-8 sm:h-10 p-0"
+          onClick={() => router.push('/prompts')}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <h1 className="text-lg sm:text-2xl font-bold flex-grow">{prompt.title}</h1>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={handleShare}>
+              {shareSuccess ? "已分享" : "分享"}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push(`/prompts/${id}/edit`)}>
+              编辑
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setShowDeleteConfirm(true)}
+              className="text-destructive"
+            >
+              删除
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="mb-6">
+        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {new Date(prompt.created_at).toLocaleDateString()}
+          </div>
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Version {prompt.version}
+          </div>
+        </div>
+        
+        {prompt.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {prompt.tags.map((pt) => (
+              <Badge key={pt} variant="outline">{pt}</Badge>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">提示词内容</h2>
+        <div className="relative p-4 rounded-lg bg-muted/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleCopy}
+            className="absolute top-2 right-2 text-muted-foreground h-8 w-8 bg-background/50 hover:bg-background/80"
+          >
+            {copySuccess ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
+          </Button>
+          <p className="text-xs sm:text-sm leading-tight whitespace-pre-wrap font-mono">
+            {prompt.content}
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3">描述</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">{prompt.description}</p>
+      </div>
 
       {prompt.cover_img && (
-        <Card className="mb-6 sm:mb-8">
-          <CardContent className="p-0">
-            <div className="rounded-lg overflow-hidden h-[250px] sm:h-[400px]">
-              <Image 
-                src={prompt.cover_img} 
-                alt={prompt.title}
-                className="w-full h-full object-contain"
-                width={1000}
-                height={1000}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-3">封面图片</h2>
+          <div className="rounded-lg overflow-hidden h-[200px] sm:h-[400px]">
+            <Image 
+              src={prompt.cover_img} 
+              alt={prompt.title}
+              className="w-full h-full object-contain bg-muted"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </div>
       )}
-
-      <Card>
-        <CardContent className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold">{prompt.title}</h1>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                onClick={handleShare}
-                variant={shareSuccess ? "success" : "secondary"}
-                className="flex-1 sm:flex-none"
-              >
-                {shareSuccess ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                  </svg>
-                )}
-              </Button>
-              <Button
-                onClick={handleCopy}
-                variant={copySuccess ? "success" : "secondary"}
-                className="flex-1 sm:flex-none"
-              >
-                {copySuccess ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-12a2 2 0 00-2-2h-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                )}
-              </Button>
-              <Button
-                onClick={() => router.push(`/prompts/${id}/edit`)}
-                variant="default"
-                className="flex-1 sm:flex-none"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </Button>
-              <Button
-                onClick={() => setShowDeleteConfirm(true)}
-                variant="destructive"
-                className="flex-1 sm:flex-none"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 mb-6 text-sm text-gray-600">
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {new Date(prompt.created_at).toLocaleDateString()}
-            </div>
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              Version {prompt.version}
-            </div>
-          </div>
-
-          <div className="prose max-w-none mb-6">
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg">提示词内容</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="max-h-[400px] overflow-y-auto">
-                  <p className="text-lg leading-relaxed whitespace-pre-wrap font-mono">{prompt.content}</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">描述</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{prompt.description}</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {prompt.tags?.length > 0 && (
-            <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">标签</h3>
-              <div className="flex flex-wrap gap-2">
-                {prompt.tags.map((pt) => (
-                  <Badge key={pt} variant="secondary">
-                    {pt}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <DialogContent>

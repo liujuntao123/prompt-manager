@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Check, Copy } from "lucide-react"
 
 export default function SharePromptDetail({ params }) {
   const unwrappedParams = use(params);
@@ -42,95 +43,78 @@ export default function SharePromptDetail({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto p-2 sm:p-6 max-w-4xl">
+      <div className="flex items-center gap-2 sm:gap-4 mb-6">
+        <h1 className="text-lg sm:text-2xl font-bold flex-grow">{prompt.title}</h1>
+      </div>
+
+      <div className="mb-6">
+        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {new Date(prompt.created_at).toLocaleDateString()}
+          </div>
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Version {prompt.version}
+          </div>
+        </div>
+
+        {prompt.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {prompt.tags.map((pt) => (
+              <Badge key={pt} variant="outline">{pt}</Badge>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">提示词内容</h2>
+        <div className="relative p-4 rounded-lg bg-muted/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+          <div className="flex justify-end mb-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopy}
+              className="h-8 w-8"
+            >
+              {copySuccess ? (
+                <Check className="h-4 w-4 text-green-500" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+          <p className="text-xs sm:text-sm leading-tight whitespace-pre-wrap font-mono">
+            {prompt.content}
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3">描述</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">{prompt.description}</p>
+      </div>
+
       {prompt.cover_img && (
-        <Card className="mb-8">
-          <CardContent className="p-0">
-            <div className="rounded-lg overflow-hidden h-[400px]">
-              <Image 
-                src={prompt.cover_img} 
-                alt={prompt.title}
-                className="w-full h-full object-contain"
-                width={1000}
-                height={1000}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-3">封面图片</h2>
+          <div className="rounded-lg overflow-hidden h-[200px] sm:h-[400px]">
+            <Image 
+              src={prompt.cover_img} 
+              alt={prompt.title}
+              className="w-full h-full object-contain bg-muted"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </div>
       )}
-
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">{prompt.title}</h1>
-            <div className="flex gap-2">
-              <Button
-                onClick={handleCopy}
-                variant={copySuccess ? "success" : "secondary"}
-              >
-                {copySuccess ? '已复制' : (
-                  <>
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-12a2 2 0 00-2-2h-2M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    复制提示词
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 mb-6 text-sm text-gray-600">
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {new Date(prompt.created_at).toLocaleDateString()}
-            </div>
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              Version {prompt.version}
-            </div>
-          </div>
-
-          <div className="prose max-w-none mb-6">
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg">提示词内容</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="max-h-[400px] overflow-y-auto">
-                  <p className="text-lg leading-relaxed whitespace-pre-wrap font-mono">{prompt.content}</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">描述</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{prompt.description}</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {prompt.tags?.length > 0 && (
-            <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">标签</h3>
-              <div className="flex flex-wrap gap-2">
-                {prompt.tags.map((pt) => (
-                  <Badge key={pt} variant="secondary">
-                    {pt}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 } 

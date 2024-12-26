@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from 'next/image';
 import CreatableSelect from 'react-select/creatable';
+import { ArrowLeft } from "lucide-react"
 
 export default function EditPrompt({ params }) {
   const router = useRouter();
@@ -87,8 +88,18 @@ export default function EditPrompt({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">编辑提示词</h1>
+    <div className="container mx-auto p-2 sm:p-6 max-w-4xl">
+      <div className="flex items-center gap-2 sm:gap-4 mb-6">
+        <Button
+          variant="ghost"
+          className="text-muted-foreground h-8 sm:h-10 p-0"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <h1 className="text-lg sm:text-2xl font-bold flex-grow">编辑提示词</h1>
+      </div>
+
       <Card>
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -196,7 +207,7 @@ export default function EditPrompt({ params }) {
               </Button>
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 onClick={() => router.back()}
               >
                 取消
