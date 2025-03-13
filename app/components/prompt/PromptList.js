@@ -2,17 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Copy, Share2, MoreHorizontal } from "lucide-react"
+import { Copy, Share2, Pencil } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { useRouter } from 'next/navigation'
 
 export default function PromptList({ prompts }) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleCopy = async (content) => {
     try {
@@ -58,78 +54,74 @@ export default function PromptList({ prompts }) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto px-3 md:px-4 py-4 md:py-8">
       {prompts?.map((prompt) => (
-        <Link href={`/prompts/${prompt.id}`} key={prompt.id}>
-          <Card className="flex flex-col transition-all duration-200 hover:shadow-lg cursor-pointer">
-            <CardContent className="flex-1 pt-3 pb-2 px-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-semibold line-clamp-1 hover:text-primary transition-colors max-w-[calc(100%-40px)]">
-                  {prompt.title}
-                </h3>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={(e) => e.preventDefault()}
-                      className="hover:bg-secondary/80"
-                    >
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem onClick={(e) => {
-                      e.preventDefault();
-                      handleCopy(prompt.content);
-                    }}>
-                      <Copy className="mr-2 h-4 w-4" />
-                      <span>复制提示词</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={(e) => {
-                      e.preventDefault();
-                      handleShare(prompt.id);
-                    }}>
-                      <Share2 className="mr-2 h-4 w-4" />
-                      <span>分享链接</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+        <Card key={prompt.id} className="flex flex-col h-full apple-hover apple-blur border-0 overflow-hidden">
+          <CardContent className="flex-1 pt-4 md:pt-6 pb-3 md:pb-4 px-4 md:px-6">
+            <div className="flex justify-between items-start mb-3 md:mb-4">
+              <h3 className="text-lg md:text-xl font-semibold tracking-tight line-clamp-1 transition-colors duration-300 max-w-[calc(100%-140px)]">
+                {prompt.title}
+              </h3>
               
-              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground/70 mb-1 sm:mb-1.5">
-                <span>{new Date(prompt.created_at).toLocaleDateString()}</span>
-                {prompt.version && (
-                  <div className="flex items-center gap-2">
-                    <span className="hidden sm:inline">•</span>
-                    <span>版本: {prompt.version}</span>
-                  </div>
-                )}
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.push(`/prompts/${prompt.id}`)}
+                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleCopy(prompt.content)}
+                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleShare(prompt.id)}
+                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
+                >
+                  <Share2 className="h-4 w-4" />
+                </Button>
               </div>
-              
-              <p className="text-muted-foreground/90 text-[11px] sm:text-xs leading-4 sm:leading-5 h-[40px] sm:h-[400px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent bg-secondary/20 rounded-sm p-2">
-                {prompt.content}
-              </p>
-              
-              <div className="flex flex-wrap gap-1 sm:gap-1.5 min-h-[20px] sm:min-h-[24px] max-h-[20px] sm:max-h-[24px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-white after:to-transparent">
-                {prompt.tags?.map((tag) => (
-                  <span 
-                    key={tag}
-                    className="bg-secondary/80 text-secondary-foreground text-xs px-2.5 py-0.5 rounded-full hover:bg-secondary transition-colors"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-                {prompt.tags?.length > 3 && (
-                  <span className="text-muted-foreground text-xs">
-                    +{prompt.tags.length - 3}
-                  </span>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+            </div>
+            
+            <div className="flex flex-row flex-wrap items-center gap-2 text-xs md:text-sm text-muted-foreground mb-3">
+              <span className="font-medium">{new Date(prompt.created_at).toLocaleDateString()}</span>
+              {prompt.version && (
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground/50">•</span>
+                  <span className="font-medium">版本 {prompt.version}</span>
+                </div>
+              )}
+            </div>
+            
+            <p className="text-muted-foreground text-xs md:text-sm leading-relaxed h-[72px] md:h-[80px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-12 after:w-full after:bg-gradient-to-t after:from-background after:to-transparent rounded-lg p-2.5 md:p-3 bg-secondary/30">
+              {prompt.content}
+            </p>
+            
+            <div className="flex flex-wrap gap-1.5 md:gap-2 mt-3 md:mt-4 min-h-[24px] md:min-h-[28px] max-h-[48px] md:max-h-[56px] overflow-hidden">
+              {prompt.tags?.map((tag) => (
+                <span 
+                  key={tag}
+                  className="bg-accent text-accent-foreground text-[10px] md:text-xs font-medium px-2.5 md:px-3 py-1 rounded-full transition-colors duration-200 hover:bg-accent/80"
+                >
+                  #{tag}
+                </span>
+              ))}
+              {prompt.tags?.length > 3 && (
+                <span className="text-muted-foreground text-[10px] md:text-xs font-medium px-2 py-1">
+                  +{prompt.tags.length - 3}
+                </span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

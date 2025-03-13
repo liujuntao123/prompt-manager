@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server'
 
 export async function GET(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   
@@ -26,7 +26,7 @@ export async function GET(request, { params }) {
 }
 
 export async function POST(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -69,7 +69,7 @@ export async function POST(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const { userId } = await auth()
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 

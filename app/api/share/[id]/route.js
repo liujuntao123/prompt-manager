@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
 
 export async function GET(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   
   const { data: prompt, error } = await supabase

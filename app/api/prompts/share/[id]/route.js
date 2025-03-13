@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server'
 
 export async function POST(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   const { userId } = await auth()
   // 检查提示词是否存在
