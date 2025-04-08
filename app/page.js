@@ -1,15 +1,24 @@
 import Link from "next/link";
+import Particles from '@/components/ui/Particles';
 
 export default function Home() {
   return (
     <div 
-      className="min-h-screen bg-gradient-to-b from-gray-900 to-black relative overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/background.jpg')" }}
-    >
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+      className="min-h-screen bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
       
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    >
+      <div style={{ width: '100%', height: '100vh', position: 'relative' }} >
+       <Particles
+    particleColors={['#ffffff', '#ffffff']}
+    particleCount={200}
+    particleSpread={10}
+    speed={0.1}
+    particleBaseSize={100}
+    moveParticlesOnHover={false}
+    alphaParticles={false}
+    disableRotation={false}
+  />
+      <main className="absolute overflow-auto inset-0 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         <div className="text-center">
           <h1 className="text-7xl font-bold text-white mb-6 animate-fade-in drop-shadow-lg tracking-tight">
             ✨ Prompt Manager
@@ -67,6 +76,7 @@ export default function Home() {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }
