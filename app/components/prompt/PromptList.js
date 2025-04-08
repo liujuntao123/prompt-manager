@@ -54,11 +54,11 @@ export default function PromptList({ prompts }) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto px-3 md:px-4 py-4 md:py-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto  py-4  md:py-8">
       {prompts?.map((prompt) => (
-        <Card key={prompt.id} className="flex flex-col h-full apple-hover apple-blur border-0 overflow-hidden">
-          <CardContent className="flex-1 pt-4 md:pt-6 pb-3 md:pb-4 px-4 md:px-6">
-            <div className="flex justify-between items-start mb-3 md:mb-4">
+        <Card key={prompt.id} className="flex flex-col h-full p-0 border-0 overflow-hidden">
+          <CardContent className="flex-1 p-4">
+            <div className="flex justify-between items-start">
               <h3 className="text-lg md:text-xl font-semibold tracking-tight line-clamp-1 transition-colors duration-300 max-w-[calc(100%-140px)]">
                 {prompt.title}
               </h3>
@@ -68,23 +68,16 @@ export default function PromptList({ prompts }) {
                   variant="ghost"
                   size="icon"
                   onClick={() => router.push(`/prompts/${prompt.id}`)}
-                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
+                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleCopy(prompt.content)}
-                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
+                
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => handleShare(prompt.id)}
-                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded-full"
+                  className="h-8 w-8 md:h-10 md:w-10 hover:bg-secondary/80 rounded"
                 >
                   <Share2 className="h-4 w-4" />
                 </Button>
@@ -101,15 +94,30 @@ export default function PromptList({ prompts }) {
               )}
             </div>
             
-            <p className="text-muted-foreground text-xs md:text-sm leading-relaxed h-[72px] md:h-[80px] overflow-hidden relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:h-12 after:w-full after:bg-gradient-to-t after:from-background after:to-transparent rounded-lg p-2.5 md:p-3 bg-secondary/30">
-              {prompt.content}
-            </p>
+            <div className="h-[160px] md:h-[320px] relative rounded bg-secondary/30">
+              <div className="absolute top-2 right-2 z-10">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleCopy(prompt.content)}
+                  className="h-4 w-4 md:h-6 md:w-6 hover:bg-secondary/80 rounded"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="h-full overflow-auto">
+                <p className="text-muted-foreground text-xs md:text-sm leading-relaxed p-4 md:p-4">
+                  {prompt.content}
+                </p>
+              </div>
+            </div>
+          
             
             <div className="flex flex-wrap gap-1.5 md:gap-2 mt-3 md:mt-4 min-h-[24px] md:min-h-[28px] max-h-[48px] md:max-h-[56px] overflow-hidden">
               {prompt.tags?.map((tag) => (
                 <span 
                   key={tag}
-                  className="bg-accent text-accent-foreground text-[10px] md:text-xs font-medium px-2.5 md:px-3 py-1 rounded-full transition-colors duration-200 hover:bg-accent/80"
+                  className="bg-accent text-accent-foreground text-[10px] md:text-xs font-medium px-2.5 md:px-3 py-1 rounded flex items-center justify-center"
                 >
                   #{tag}
                 </span>

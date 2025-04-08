@@ -70,7 +70,7 @@ export default function PromptsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="搜索提示词..."
-                  className="w-full h-12 pl-10 transition-all border rounded-lg focus:ring-2 focus:ring-primary/50"
+                  className="w-full h-12 pl-10 transition-all border rounded focus:ring-2 focus:ring-primary/50"
                 />
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function PromptsPage() {
             <Spinner className="w-8 h-8" />
           </div>
         ) : (
-          <div className="mt-8">
+          <div className="mt-4">
             <PromptList prompts={filteredPrompts} />
           </div>
         )}

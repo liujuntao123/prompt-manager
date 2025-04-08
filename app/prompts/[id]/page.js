@@ -148,12 +148,17 @@ export default function PromptDetail({ params }) {
 
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">提示词内容</h2>
-        <div className="relative p-4 rounded-lg bg-muted/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+        <div className="relative p-4 rounded bg-muted/50 max-h-[300px] sm:max-h-[500px]">
+          <div className="overflow-y-auto max-h-[300px] sm:max-h-[500px] pr-10">
+            <p className="text-xs sm:text-sm leading-tight whitespace-pre-wrap font-mono">
+              {prompt.content}
+            </p>
+          </div>
           <Button 
             variant="ghost" 
             size="icon"
             onClick={handleCopy}
-            className="absolute top-2 right-2 text-muted-foreground h-8 w-8 bg-background/50 hover:bg-background/80"
+            className="absolute top-2 right-6 text-muted-foreground h-8 w-8 bg-background/50 hover:bg-background/80"
           >
             {copySuccess ? (
               <Check className="h-4 w-4 text-green-500" />
@@ -161,9 +166,6 @@ export default function PromptDetail({ params }) {
               <Copy className="h-4 w-4" />
             )}
           </Button>
-          <p className="text-xs sm:text-sm leading-tight whitespace-pre-wrap font-mono">
-            {prompt.content}
-          </p>
         </div>
       </div>
 
@@ -175,7 +177,7 @@ export default function PromptDetail({ params }) {
       {prompt.cover_img && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">封面图片</h2>
-          <div className="rounded-lg overflow-hidden h-[200px] sm:h-[400px]">
+          <div className="rounded overflow-hidden h-[200px] sm:h-[400px]">
             <Image 
               src={prompt.cover_img} 
               alt={prompt.title}
@@ -195,9 +197,7 @@ export default function PromptDetail({ params }) {
           <p className="text-muted-foreground">确定要删除这个提示词吗？此操作无法撤销。</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              取消
             </Button>
             <Button
               variant="destructive"
@@ -206,9 +206,7 @@ export default function PromptDetail({ params }) {
                 setShowDeleteConfirm(false);
               }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-              </svg>
+              删除
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -75,7 +75,7 @@ export default function SharePromptDetail({ params }) {
 
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">提示词内容</h2>
-        <div className="relative p-4 rounded-lg bg-muted/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+        <div className="relative p-4 rounded bg-muted/50 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
           <div className="flex justify-end mb-2">
             <Button
               variant="ghost"
@@ -104,7 +104,7 @@ export default function SharePromptDetail({ params }) {
       {prompt.cover_img && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">封面图片</h2>
-          <div className="rounded-lg overflow-hidden h-[200px] sm:h-[400px]">
+          <div className="rounded overflow-hidden h-[200px] sm:h-[400px]">
             <Image 
               src={prompt.cover_img} 
               alt={prompt.title}
